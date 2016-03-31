@@ -8,12 +8,13 @@ interface ActivitylogHandlerInterface
      * Log some activity.
      *
      * @param string $text
-     * @param string $user
+     * @param string $model
      * @param array  $attributes
      *
      * @return bool
+     * @internal param string $user
      */
-    public function log($text, $user = '', $attributes = []);
+    public function log($text, $model = '', $attributes = []);
 
     /**
      * Clean old log records.

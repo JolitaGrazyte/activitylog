@@ -34,6 +34,7 @@ return [
     |
     */
     'defaultUserId' => '',
+    'defaultCausingActivity' => User::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -57,4 +58,10 @@ return [
     |
     */
     'userModel' => null,
+
+    'logsActivity' => [
+        'items',
+        'products'
+
+    ]
 ];

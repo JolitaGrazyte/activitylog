@@ -28,10 +28,9 @@ This service provider must be registered.
 
 'providers' => [
     '...',
-    'Spatie\Activitylog\ActivitylogServiceProvider',
+    Spatie\Activitylog\ActivitylogServiceProvider::class,
 ];
 ```
-
 
 You'll also need to publish and run the migration in order to create the db-table.
 ```
@@ -39,6 +38,12 @@ php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProv
 php artisan migrate
 ```
 
+Each time you would add a model/table that implements LogsActivity to the config logActivity array 
+you need to publish and run the migration once again in order to add the extra needed fields that db-table.
+```
+php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="migrations"
+php artisan migrate
+```
 
 Activitylog also comes with a facade, which provides an easy way to call it.
 ```php
@@ -46,7 +51,7 @@ Activitylog also comes with a facade, which provides an easy way to call it.
 
 'aliases' => [
 	...
-	'Activity' => 'Spatie\Activitylog\ActivitylogFacade',
+	'Activity' => Spatie\Activitylog\ActivitylogFacade::class,
 ];
 ```
 

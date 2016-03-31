@@ -11,5 +11,5 @@ interface LogsActivityInterface
      *
      * @return string
      */
-    public function getActivityDescriptionForEvent($eventName);
+    public function getActivityDescriptionForEvent(string $eventName) : string;
 }

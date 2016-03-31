@@ -8,6 +8,7 @@ use Spatie\Activitylog\Handlers\BeforeHandler;
 use Spatie\Activitylog\Handlers\DefaultLaravelHandler;
 use Request;
 use Config;
+use Auth;
 
 class ActivitylogSupervisor
 {
@@ -44,23 +45,29 @@ class ActivitylogSupervisor
     /**
      * Log some activity to all registered log handlers.
      *
-     * @param $text
-     * @param string $userId
+     * @param string $text
+     * @param string $causesactivity
+     * @param string $model
+     *
+     * @param string $adjustments
      *
      * @return bool
+     * @internal param string $userId
      */
-    public function log($text, $userId = '')
+    public function log(string $text, $causesactivity = '', $model = '', string $adjustments = '') : bool
     {
-        $userId = $this->normalizeUserId($userId);
 
-        if (! $this->shouldLogCall($text, $userId)) {
+        if (!$this->shouldLogCall($text, $model)) {
             return false;
         }
 
         $ipAddress = Request::getClientIp();
 
+//        dd($causesactivity);
+//        $causesactivity = Auth::guard('other')->user() !== null ? Auth::guard('other')->user() : Auth::user();
+
         foreach ($this->logHandlers as $logHandler) {
-            $logHandler->log($text, $userId, compact('ipAddress'));
+            $logHandler->log($text, $causesactivity, $model, compact('ipAddress', 'adjustments'));
         }
 
         return true;
@@ -116,7 +123,7 @@ class ActivitylogSupervisor
      *
      * @return bool
      */
-    protected function shouldLogCall($text, $userId)
+    protected function shouldLogCall(string $text, $userId)
     {
         $beforeHandler = $this->config->get('activitylog.beforeHandler');
 

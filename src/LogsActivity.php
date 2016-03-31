@@ -2,22 +2,33 @@
 
 namespace Spatie\Activitylog;
 
-use Activity;
+use Illuminate\Contracts\Support;
 
 trait LogsActivity
 {
     protected static function bootLogsActivity()
     {
         foreach (static::getRecordActivityEvents() as $eventName) {
+
             static::$eventName(function (LogsActivityInterface $model) use ($eventName) {
 
                 $message = $model->getActivityDescriptionForEvent($eventName);
 
+//                dd($eventName, $model);
+                $causesActivity = $model->causesActivity ?? '';
+
+                $adjustments = $eventName !== 'deleted' ? json_encode(array_intersect_key($model->fresh()->toArray(), $model->getDirty())) : '';
+
                 if ($message != '') {
-                    Activity::log($message);
+                    app(ActivitylogSupervisor::class)->log($message, $causesActivity, $model, $adjustments);
                 }
             });
         }
+    }
+
+    public function causesActivity()
+    {
+        return $this->morphTo();
     }
 
     /**

@@ -6,9 +6,7 @@ use Spatie\Activitylog\CausesActivity;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class DummyUser1
- *
- * @package \Spatie\Activitylog\Test\Models
+ * Class DummyUser1.
  */
 class DummyUser1 extends Model
 {

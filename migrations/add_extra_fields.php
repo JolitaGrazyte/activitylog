@@ -10,29 +10,24 @@ class AddExtraFields extends Migration
      */
     public function up()
     {
-        collect(config('activitylog.logsActivity'))->each(function($item){
+        collect(config('activitylog.logsActivity'))->each(function ($item) {
 
-           Schema::table($item, function (Blueprint $table) use ($item){
+           Schema::table($item, function (Blueprint $table) use ($item) {
 
-              if(!Schema::hasColumn($item, 'causes_activity_id')){
-
+              if (!Schema::hasColumn($item, 'causes_activity_id')) {
                   $table->integer('causes_activity_id');
-
               }
 
-              if(!Schema::hasColumn($item, 'causes_activity_type')){
-
+              if (!Schema::hasColumn($item, 'causes_activity_type')) {
                   $table->string('causes_activity_type');
-
               }
 
           });
 
         });
 
-        collect(glob(database_path("/migrations/*_add_extra_fields.php")))->each(function($file){
+        collect(glob(database_path('/migrations/*_add_extra_fields.php')))->each(function ($file) {
             unlink($file);
         });
-
     }
 }

@@ -20,9 +20,8 @@ class ActivitylogServiceProvider extends ServiceProvider
     {
         // Publish a config file
         $this->publishes([
-            __DIR__ . '/../config/activitylog.php' => config_path('activitylog.php'),
+            __DIR__.'/../config/activitylog.php' => config_path('activitylog.php'),
         ], 'config');
-
 
         $timestamp = date('Y_m_d_His', time());
 
@@ -30,16 +29,13 @@ class ActivitylogServiceProvider extends ServiceProvider
             // Publish migration
 
             $this->publishes([
-                __DIR__ . "/../migrations/create_activity_log_table.stub" => database_path("/migrations/{$timestamp}_create_activity_log_table.php"),
-                __DIR__ . "/../migrations/add_extra_fields.stub" => database_path("/migrations/{$timestamp}_add_extra_fields.php"),
+                __DIR__.'/../migrations/create_activity_log_table.stub' => database_path("/migrations/{$timestamp}_create_activity_log_table.php"),
+                __DIR__.'/../migrations/add_extra_fields.stub' => database_path("/migrations/{$timestamp}_add_extra_fields.php"),
             ], 'migrations');
-        }
-        else{
-
+        } else {
             $this->publishes([
-                __DIR__ . "/../migrations/add_extra_fields.stub" => database_path("/migrations/{$timestamp}_add_extra_fields.php"),
+                __DIR__.'/../migrations/add_extra_fields.stub' => database_path("/migrations/{$timestamp}_add_extra_fields.php"),
             ], 'migrations');
-
         }
     }
 

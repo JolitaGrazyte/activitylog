@@ -47,7 +47,7 @@ return [
     |
     */
     'beforeHandler' => null,
-    
+
     /*
     |--------------------------------------------------------------------------
     | The class name for the related user model
@@ -61,7 +61,7 @@ return [
 
     'logsActivity' => [
         'items',
-        'products'
+        'products',
 
-    ]
+    ],
 ];

@@ -2,23 +2,16 @@
 
 namespace Spatie\Activitylog\Handlers;
 
+use Illuminate\Database\Eloquent\Model;
 use Log;
 
 class DefaultLaravelHandler implements ActivitylogHandlerInterface
 {
-    /**
-     * Log activity in Laravels log handler.
-     *
-     * @param string $text
-     * @param string $model
-     * @param array  $attributes
-     * @return bool
-     * @internal param $userId
-     */
-    public function log($text, $model = '',  $attributes = [])
+    /* Log activity in Laravels log handler. */
+    public function log(string $text, Model $model = null,  array $attributes = [])
     {
         $logText = $text;
-        $logText .= (empty($model) ? ' (by '.$model->causesActivity->id.')' : '');
+        $logText .= (is_null($model) ?: ' (by '.$model->causes_activity_id.')');
         $logText .= (count($attributes)) ? PHP_EOL.print_r($attributes, true) : '';
 
         Log::info($logText);
@@ -26,17 +19,10 @@ class DefaultLaravelHandler implements ActivitylogHandlerInterface
         return true;
     }
 
-    /**
-     * Clean old log records.
-     *
-     * @param int $maxAgeInMonths
-     *
-     * @return bool
-     */
-    public function cleanLog($maxAgeInMonths)
+    /* Clean old log records. */
+    public function cleanLog(int $maxAgeInMonths) : bool
     {
         //this handler can't clean it's records
-
         return true;
     }
 }

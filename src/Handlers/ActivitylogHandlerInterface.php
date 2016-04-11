@@ -2,26 +2,13 @@
 
 namespace Spatie\Activitylog\Handlers;
 
+use Illuminate\Database\Eloquent\Model;
+
 interface ActivitylogHandlerInterface
 {
-    /**
-     * Log some activity.
-     *
-     * @param string $text
-     * @param string $model
-     * @param array  $attributes
-     *
-     * @return bool
-     * @internal param string $user
-     */
-    public function log($text, $model = '', $attributes = []);
+    /* Log some activity. */
+    public function log(string $text, Model $model = null, array $attributes = []) : bool;
 
-    /**
-     * Clean old log records.
-     *
-     * @param int $maxAgeInMonths
-     *
-     * @return bool
-     */
-    public function cleanLog($maxAgeInMonths);
+    /* Clean old log records. */
+    public function cleanLog(int $maxAgeInMonths) : bool;
 }

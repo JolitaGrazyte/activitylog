@@ -2,10 +2,11 @@
 
 namespace Spatie\Activitylog;
 
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+
 trait CausesActivity
 {
-
-    public function logsActivity()
+    public function logsActivity() : MorphMany
     {
         return $this->morphMany($this->getMorphedClass(), 'causes_activity');
     }
@@ -14,5 +15,4 @@ trait CausesActivity
     {
         return $this;
     }
-
 }

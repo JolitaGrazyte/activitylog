@@ -48,7 +48,6 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         $this->createDummyUsers();
 
         $this->createDummyItems();
-
     }
 
     public function getTempDirectory($suffix = '')
@@ -134,24 +133,22 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 
     protected function createDummyItems()
     {
-        DummyUser1::each(function($user) {
+        DummyUser1::each(function ($user) {
             $item1 = new DummyItem1();
-            $item1->name = "test name";
+            $item1->name = 'test name';
             $item2 = new DummyItem2();
-            $item2->name = "test name";
+            $item2->name = 'test name';
             $user->logsActivity()->save($item1);
             $user->logsActivity()->save($item2);
         });
 
-        DummyUser2::each(function($user) {
+        DummyUser2::each(function ($user) {
             $item1 = new DummyItem1();
-            $item1->name = "test name";
+            $item1->name = 'test name';
             $item2 = new DummyItem2();
-            $item2->name = "test name";
+            $item2->name = 'test name';
             $user->logsActivity()->save($item1);
             $user->logsActivity()->save($item2);
         });
-
     }
-
 }

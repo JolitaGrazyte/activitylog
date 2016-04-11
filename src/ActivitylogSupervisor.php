@@ -9,6 +9,7 @@ use Spatie\Activitylog\Handlers\DefaultLaravelHandler;
 use Request;
 use Config;
 use Auth;
+use Illuminate\Database\Eloquent\Model;
 
 class ActivitylogSupervisor
 {
@@ -25,9 +26,9 @@ class ActivitylogSupervisor
      * Create the logsupervisor using a default Handler
      * Also register Laravels Log Handler if needed.
      *
-     * @param Handlers\ActivitylogHandlerInterface $logHandler
-     * @param Repository                           $config
-     * @param Guard                                $auth
+     * @param \Spatie\Activitylog\Handlers\ActivitylogHandlerInterface $logHandler
+     * @param \Illuminate\Config\Repository                            $config
+     * @param \Illuminate\Contracts\Auth\Guard                         $auth
      */
     public function __construct(Handlers\ActivitylogHandlerInterface $logHandler, Repository $config, Guard $auth)
     {
@@ -42,43 +43,24 @@ class ActivitylogSupervisor
         $this->auth = $auth;
     }
 
-    /**
-     * Log some activity to all registered log handlers.
-     *
-     * @param string $text
-     * @param string $causesactivity
-     * @param string $model
-     *
-     * @param string $adjustments
-     *
-     * @return bool
-     * @internal param string $userId
-     */
-    public function log(string $text, $causesactivity = '', $model = '', string $adjustments = '') : bool
+    /* Log some activity to all registered log handlers. */
+    public function log(string $text, Model $model = null, string $adjustments = '') : bool
     {
-
         if (!$this->shouldLogCall($text, $model)) {
             return false;
         }
 
         $ipAddress = Request::getClientIp();
 
-//        dd($causesactivity);
-//        $causesactivity = Auth::guard('other')->user() !== null ? Auth::guard('other')->user() : Auth::user();
-
         foreach ($this->logHandlers as $logHandler) {
-            $logHandler->log($text, $causesactivity, $model, compact('ipAddress', 'adjustments'));
+            $logHandler->log($text, $model, compact('ipAddress', 'adjustments'));
         }
 
         return true;
     }
 
-    /**
-     * Clean out old entries in the log.
-     *
-     * @return bool
-     */
-    public function cleanLog()
+    /* Clean out old entries in the log. */
+    public function cleanLog() : bool
     {
         foreach ($this->logHandlers as $logHandler) {
             $logHandler->cleanLog(Config::get('activitylog.deleteRecordsOlderThanMonths'));
@@ -123,7 +105,7 @@ class ActivitylogSupervisor
      *
      * @return bool
      */
-    protected function shouldLogCall(string $text, $userId)
+    protected function shouldLogCall(string $text, Model $model)
     {
         $beforeHandler = $this->config->get('activitylog.beforeHandler');
 
@@ -131,6 +113,6 @@ class ActivitylogSupervisor
             return true;
         }
 
-        return app($beforeHandler)->shouldLog($text, $userId);
+        return app($beforeHandler)->shouldLog($text, $model->id);
     }
 }

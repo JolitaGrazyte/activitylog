@@ -2,31 +2,29 @@
 
 namespace Spatie\Activitylog;
 
-use Illuminate\Contracts\Support;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 trait LogsActivity
 {
     protected static function bootLogsActivity()
     {
-        foreach (static::getRecordActivityEvents() as $eventName) {
+        collect(static::getRecordActivityEvents())->map(function ($eventName) {
 
-            static::$eventName(function (LogsActivityInterface $model) use ($eventName) {
+            return static::$eventName(function (LogsActivityInterface $model) use ($eventName) {
 
                 $message = $model->getActivityDescriptionForEvent($eventName);
-
-//                dd($eventName, $model);
-                $causesActivity = $model->causesActivity ?? '';
 
                 $adjustments = $eventName !== 'deleted' ? json_encode(array_intersect_key($model->fresh()->toArray(), $model->getDirty())) : '';
 
                 if ($message != '') {
-                    app(ActivitylogSupervisor::class)->log($message, $causesActivity, $model, $adjustments);
+                    app(ActivitylogSupervisor::class)->log($message, $model, $adjustments);
                 }
             });
-        }
+
+        });
     }
 
-    public function causesActivity()
+    public function causesActivity() : MorphTo
     {
         return $this->morphTo();
     }
@@ -37,7 +35,7 @@ trait LogsActivity
      *
      * @return array
      */
-    protected static function getRecordActivityEvents()
+    protected static function getRecordActivityEvents() : array
     {
         if (isset(static::$recordEvents)) {
             return static::$recordEvents;

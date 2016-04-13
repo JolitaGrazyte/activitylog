@@ -4,10 +4,10 @@ namespace Spatie\Activitylog\Test;
 
 use Spatie\Activitylog\ActivitylogServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
-use Spatie\Activitylog\Test\Models\DummyUser1;
-use Spatie\Activitylog\Test\Models\DummyUser2;
-use Spatie\Activitylog\Test\Models\DummyItem1;
-use Spatie\Activitylog\Test\Models\DummyItem2;
+use Spatie\Activitylog\Test\Models\User1;
+use Spatie\Activitylog\Test\Models\User2;
+use Spatie\Activitylog\Test\Models\Item1;
+use Spatie\Activitylog\Test\Models\Item2;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
@@ -35,19 +35,19 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     {
         file_put_contents($this->getTempDirectory().'/database.sqlite', null);
 
-        $this->createDummyItem1sTable($app);
+        $this->createItem1sTable($app);
 
-        $this->createDummyItem2sTable($app);
+        $this->createItem2sTable($app);
 
-        $this->createDummyUser1sTable($app);
+        $this->createUser1sTable($app);
 
-        $this->createDummyUser2sTable($app);
+        $this->createUser2sTable($app);
 
         $this->createActivityLogTable($app);
 
-        $this->createDummyUsers();
+        $this->createUsers();
 
-        $this->createDummyItems();
+        $this->createItems();
     }
 
     public function getTempDirectory($suffix = '')
@@ -55,20 +55,20 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         return __DIR__.'/temp'.($suffix == '' ? '' : '/'.$suffix);
     }
 
-    protected function createDummyUsers()
+    protected function createUsers()
     {
         foreach (range(1, 10) as $index) {
-            DummyUser1::create();
-            DummyUser2::create();
+            User1::create();
+            User2::create();
         }
     }
 
     /**
      * @param $app
      */
-    protected function createDummyItem1sTable($app)
+    protected function createItem1sTable($app)
     {
-        $app['db']->connection()->getSchemaBuilder()->create('dummy_item1s', function (Blueprint $table) {
+        $app['db']->connection()->getSchemaBuilder()->create('item1s', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('causes_activity_type')->nullable();
@@ -80,9 +80,9 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     /**
      * @param $app
      */
-    protected function createDummyItem2sTable($app)
+    protected function createItem2sTable($app)
     {
-        $app['db']->connection()->getSchemaBuilder()->create('dummy_item2s', function (Blueprint $table) {
+        $app['db']->connection()->getSchemaBuilder()->create('item2s', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('causes_activity_type')->nullable();
@@ -94,9 +94,9 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     /**
      * @param $app
      */
-    protected function createDummyUser1sTable($app)
+    protected function createUser1sTable($app)
     {
-        $app['db']->connection()->getSchemaBuilder()->create('dummy_user1s', function (Blueprint $table) {
+        $app['db']->connection()->getSchemaBuilder()->create('user1s', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
         });
@@ -105,9 +105,9 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     /**
      * @param $app
      */
-    protected function createDummyUser2sTable($app)
+    protected function createUser2sTable($app)
     {
-        $app['db']->connection()->getSchemaBuilder()->create('dummy_user2s', function (Blueprint $table) {
+        $app['db']->connection()->getSchemaBuilder()->create('user2s', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
         });
@@ -131,21 +131,21 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         });
     }
 
-    protected function createDummyItems()
+    protected function createItems()
     {
-        DummyUser1::each(function ($user) {
-            $item1 = new DummyItem1();
+        User1::each(function ($user) {
+            $item1 = new Item1();
             $item1->name = 'test name';
-            $item2 = new DummyItem2();
+            $item2 = new Item2();
             $item2->name = 'test name';
             $user->logsActivity()->save($item1);
             $user->logsActivity()->save($item2);
         });
 
-        DummyUser2::each(function ($user) {
-            $item1 = new DummyItem1();
+        User2::each(function ($user) {
+            $item1 = new Item1();
             $item1->name = 'test name';
-            $item2 = new DummyItem2();
+            $item2 = new Item2();
             $item2->name = 'test name';
             $user->logsActivity()->save($item1);
             $user->logsActivity()->save($item2);

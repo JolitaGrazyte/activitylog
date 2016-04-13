@@ -6,7 +6,7 @@ use Spatie\Activitylog\LogsActivityInterface;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogsActivity;
 
-class DummyItem1 extends Model implements LogsActivityInterface
+class Item1 extends Model implements LogsActivityInterface
 {
     use LogsActivity;
 

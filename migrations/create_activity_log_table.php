@@ -20,6 +20,7 @@ class CreateActivityLogTable extends Migration
             $table->string('ip_address', 64);
             $table->string('adjustments')->nullable();
             $table->timestamps();
+            $table->index('created_at');
         });
     }
 
